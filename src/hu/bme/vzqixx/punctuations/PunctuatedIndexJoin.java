@@ -82,20 +82,26 @@ public class PunctuatedIndexJoin {
                 String pattern = PunctuationHelper.getPunctuationPattern(sRecord, sIdx);
                 // load records of R to index I by the punctuation s
                 I.put(pattern, r.get(pattern));
-                out.println(sLine); // propagate punctuation
+                if (Configuration.DO_PRINT) {
+                    out.println(sLine); // propagate punctuation
+                }
             } else if (PunctuationHelper.isTailPunctuation(sRecord)) {
                 String pattern = PunctuationHelper.getPunctuationPattern(sRecord, sIdx);
                 // discard records from index I by the punctuation s
                 I.remove(pattern);
-                out.println(sLine); // propagate punctuation
+                if (Configuration.DO_PRINT) {
+                    out.println(sLine); // propagate punctuation
+                }
             } else {
                 String sJoinAttribute = sRecord[sIdx];
                 String rLine = I.get(sJoinAttribute);
-                if (rLine != null) {
-                    out.println(sLine+Configuration.SEPARATOR+rLine);
-                } else {
-                    // no match, behave as outer join
-                    out.println(sLine+Configuration.SEPARATOR+Configuration.OUTER_JOIN_NULL_MARK);
+                if (Configuration.DO_PRINT) {
+                    if (rLine != null) {
+                        out.println(sLine + Configuration.SEPARATOR + rLine);
+                    } else {
+                        // no match, behave as outer join
+                        out.println(sLine + Configuration.SEPARATOR + Configuration.OUTER_JOIN_NULL_MARK);
+                    }
                 }
             }
             timer.pause(); // exclude string slitting from time measurements

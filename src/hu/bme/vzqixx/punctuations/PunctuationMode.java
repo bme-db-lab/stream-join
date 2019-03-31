@@ -18,6 +18,4 @@ public enum PunctuationMode {
         return NONE.equals(this);
     }
 
-    public static String headPunctuationMark = "#";
-    public static String tailPunctuationMark = "*";
 }

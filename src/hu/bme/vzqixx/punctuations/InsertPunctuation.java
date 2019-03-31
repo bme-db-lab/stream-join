@@ -9,12 +9,10 @@ import java.util.stream.Stream;
 
 public class InsertPunctuation {
 
-    public static final String SEPARATOR="|";
-
     public static void main(String[] args) {
         if (args.length < 5) {
             printUsage();
-            System.exit(0);
+            System.exit(-1);
         }
 
         PunctuationMode mode = PunctuationMode.valueOf(args[0]);
@@ -56,7 +54,7 @@ public class InsertPunctuation {
                 br.readLine();
             }
             for (int i=(headerInFirstRow?1:0); (line = br.readLine()) != null; i++) {
-                String[] fields = line.split(Pattern.quote(SEPARATOR));
+                String[] fields = line.split(Pattern.quote(Configuration.SEPARATOR));
                 String pattern = fields[punctuationOnFieldPosition];
                 itemLastIndex.put(pattern, i);
             }
@@ -68,22 +66,22 @@ public class InsertPunctuation {
                 outputStream.println(line);
             }
             for (int i=(headerInFirstRow?1:0); (line = br.readLine()) != null; i++) {
-                String[] fields = line.split(Pattern.quote(SEPARATOR));
+                String[] fields = line.split(Pattern.quote(Configuration.SEPARATOR));
                 String pattern = fields[punctuationOnFieldPosition];
                 if (mode.hasHeadPunctuation && !headPunctuationEmitted.contains(pattern)) {
-                    outputStream.println(assemblePunctuation(PunctuationMode.headPunctuationMark, punctuationOnFieldPosition, fields.length, pattern));
+                    outputStream.println(assemblePunctuation(PunctuationHelper.headPunctuationMark, punctuationOnFieldPosition, fields.length, pattern));
                     headPunctuationEmitted.add(pattern);
                 }
                 outputStream.println(line);
                 if (mode.hasTailPunctuation && itemLastIndex.getOrDefault(pattern, -1) == i) {
                     // this was the last occurence, so we emit tail punctuation
-                    outputStream.println(assemblePunctuation(PunctuationMode.tailPunctuationMark, punctuationOnFieldPosition, fields.length, pattern));
+                    outputStream.println(assemblePunctuation(PunctuationHelper.tailPunctuationMark, punctuationOnFieldPosition, fields.length, pattern));
                 }
             }
         }
     }
 
     static String assemblePunctuation(String mark, int position, int length, String pattern) {
-        return mark+SEPARATOR+pattern;
+        return mark+ Configuration.SEPARATOR+pattern;
     }
 }

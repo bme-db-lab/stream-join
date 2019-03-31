@@ -70,7 +70,7 @@ public class InsertPunctuation {
             for (int i=(headerInFirstRow?1:0); (line = br.readLine()) != null; i++) {
                 String[] fields = line.split(Pattern.quote(SEPARATOR));
                 String pattern = fields[punctuationOnFieldPosition];
-                if (!headPunctuationEmitted.contains(pattern)) {
+                if (PunctuationMode.HEAD_AND_TAIL.equals(mode) && !headPunctuationEmitted.contains(pattern)) {
                     outputStream.println(assemblePunctuation(PunctuationMode.headPunctuationMark, punctuationOnFieldPosition, fields.length, pattern));
                     headPunctuationEmitted.add(pattern);
                 }
